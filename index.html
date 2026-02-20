@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30 دن ارننگ ایپ</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#111">
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f2f4f8;
+}
+.app{
+    max-width:420px;
+    margin:auto;
+    background:white;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+.header{
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:15px;
+}
+.screen{ flex:1; padding:15px; overflow:auto;}
+.day{ padding:8px 0; border-bottom:1px solid #eee;}
+.guide{ display:none; background:#f0f0f0; padding:8px; border-radius:5px;}
+.progress-circle{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:conic-gradient(#28a745 0%, #ddd 0%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:auto;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+<div class="header">30 دن آن لائن ارننگ ایپ</div>
+
+<div class="screen">
+<div class="progress-circle" id="circle">0%</div>
+<br>
+<div id="tasks"></div>
+</div>
+
+</div>
+
+<script>
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+}
+
+const guides=[
+"HTML structure سیکھیں اور practice کریں۔",
+"CSS basics سیکھیں۔",
+"Responsive design test کریں۔",
+"Landing page بنائیں۔",
+"Niche select کریں۔",
+"Keyword research کریں۔",
+"Product review لکھیں۔",
+"Affiliate apply کریں۔",
+"SEO optimize کریں۔",
+"Traffic strategy شروع کریں۔",
+"Fiverr profile بنائیں۔",
+"Gig create کریں۔",
+"Proposals بھیجیں۔",
+"Website improve کریں۔",
+"Monthly review کریں۔"
+];
+
+const container=document.getElementById("tasks");
+
+guides.forEach((g,i)=>{
+    const div=document.createElement("div");
+    div.className="day";
+
+    const cb=document.createElement("input");
+    cb.type="checkbox";
+    cb.checked=localStorage.getItem("day"+i)==="true";
+    cb.onchange=function(){
+        localStorage.setItem("day"+i,cb.checked);
+        update();
+    };
+
+    const span=document.createElement("span");
+    span.innerText=" دن "+(i+1);
+    span.style.cursor="pointer";
+    span.onclick=function(){
+        guide.style.display=guide.style.display==="block"?"none":"block";
+    };
+
+    const guide=document.createElement("div");
+    guide.className="guide";
+    guide.innerText=g;
+
+    div.appendChild(cb);
+    div.appendChild(span);
+    div.appendChild(guide);
+    container.appendChild(div);
+});
+
+function update(){
+    let done=0;
+    guides.forEach((_,i)=>{
+        if(localStorage.getItem("day"+i)==="true") done++;
+    });
+    let percent=Math.round((done/guides.length)*100);
+    document.getElementById("circle").style.background=
+        `conic-gradient(#28a745 ${percent}%, #ddd ${percent}%)`;
+    document.getElementById("circle").innerText=percent+"%";
+}
+
+update();
+
+</script>
+
+</body>
+</html>
